@@ -2,6 +2,7 @@
 // it's our little "almost a wrapper"
 
 // using getSearchResults, you are able to query TMDB for movies, tv shows, people, or all of them at once
+// valid searchTypes are ("movie", "person", "tv", "multi")
 async function getSearchResults(searchQuery, searchType, page = 1, accessTokenAuthKey) {
     let queryURL;
     //set our endpoint based on what type of search we want to perform
@@ -50,9 +51,11 @@ async function getSearchResults(searchQuery, searchType, page = 1, accessTokenAu
     }
 }
 
+// gets trending movies from TMDB over a time period. valid types are ("movie", "person", "tv", "all)
+//valid time periods are ("day", "week)
 async function getTrending(type, timePeriod, accessTokenAuthKey) {
     let queryURL;
-    switch (type) {
+    switch (type.toLowerCase()) {
         case "movie":
             queryURL = "https://api.themoviedb.org/3/trending/movie/"
             break
@@ -112,7 +115,7 @@ async function getTrending(type, timePeriod, accessTokenAuthKey) {
 // gets popular movies from TMDB. valid types are as follows: ("tv", "movie", "people")
 async function getPopular(page = 1, type, accessTokenAuthKey){
     let queryURL;
-    switch (type) {
+    switch (type.toLowerCase()) {
         case "tv":
             queryURL = "https://api.themoviedb.org/3/tv/popular"
             break
@@ -139,6 +142,47 @@ async function getPopular(page = 1, type, accessTokenAuthKey){
             headers: headerParameters,
             data: queryParams
         })
+    } catch (error) {
+        console.log("Failed to complete search request")
+        console.log(error)
+        return []
+    }
+}
+
+//gets detailed information from TMDB. Valid type are: ("tv", "movie", "people")
+async function getDetailedInfo(id,type,accessTokenAuthKey){
+    let queryURL;
+    switch(type.toLowerCase()){
+        case "movie":
+            queryURL = "https://api.themoviedb.org/3/movie/"
+            break
+        case "tv":
+            queryURL = "https://api.themoviedb.org/3/tv/"
+            break
+        case "people":
+            queryURL = "https://api.themoviedb.org/3/people/"
+            break
+        default:
+            console.log("Invalid Query Type: ", type)
+            return []
+    }
+    queryURL += id.toString()
+
+    let queryParams = {
+        language: "en-US",
+    }
+
+    let headerParameters = {
+        Authorization: `Bearer ${accessTokenAuthKey}`
+    }
+
+    try {
+        return $.ajax(queryURL, {
+            type: "GET",
+            accepts: "application/json",
+            headers: headerParameters,
+            data: queryParams
+        });
     } catch (error) {
         console.log("Failed to complete search request")
         console.log(error)
