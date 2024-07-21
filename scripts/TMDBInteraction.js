@@ -109,6 +109,7 @@ async function getTrending(type, timePeriod, accessTokenAuthKey) {
     }
 }
 
+// get's popular movies from TMDB. valid types are as follows: ("tv", "movie", "people")
 async function getPopular(page = 1, type, accessTokenAuthKey){
     let queryURL;
     switch (type) {
