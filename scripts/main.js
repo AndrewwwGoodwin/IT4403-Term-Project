@@ -1,12 +1,12 @@
 // wow, look at all that js!
 
 $(document).ready(async function () {
-    console.log("wow!")
+    //let data = await getSearchResults("Kung Fu Panda", "movie")
+    //console.log(data.results)
 })
 
-
-
-async function getSearchResults(searchQuery, searchType, apikey, page = 1) {
+// using getSearchResults, you are able to query TMDB for movies, tv shows, people, or all of them at once
+async function getSearchResults(searchQuery, searchType, page = 1) {
     let queryURL;
     //set our endpoint based on what type of search we want to perform
     switch (searchType){
@@ -35,15 +35,17 @@ async function getSearchResults(searchQuery, searchType, apikey, page = 1) {
         "language": "en-US",
         "page": page
     }
-    let requestHeaders = {
-        "Authorization": "Bearer " + apikey
-    }
 
     //finally lets make the call
-    return $.ajax(queryURL, {
-        headers: requestHeaders,
-        type: "GET",
-        accepts: "application/json",
-        data: queryParams
-    });
+    try {
+        return $.ajax(queryURL, {
+            type: "GET",
+            accepts: "application/json",
+            data: queryParams
+        });
+    } catch (error) {
+        console.log("Failed to complete search request")
+        console.log(error)
+        return []
+    }
 }
