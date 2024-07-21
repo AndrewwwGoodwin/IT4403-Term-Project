@@ -1,3 +1,6 @@
+// this file should be functions for interacting and pulling info from TMDB
+// it's our little "almost a wrapper"
+
 // using getSearchResults, you are able to query TMDB for movies, tv shows, people, or all of them at once
 async function getSearchResults(searchQuery, searchType, page = 1, accessTokenAuthKey) {
     let queryURL;
@@ -47,12 +50,6 @@ async function getSearchResults(searchQuery, searchType, page = 1, accessTokenAu
     }
 }
 
-// for whatever reason this endpoint requires authorization via token
-// which introduces its own set of issues, since we shouldn't share our keys in plaintext javascript.
-// there's probably some way to fix this with php, but I don't really know how that works.
-// valid options are as following
-// (movie, people, tv, all)
-// (day, week)
 async function getTrending(type, timePeriod, accessTokenAuthKey) {
     let queryURL;
     switch (type) {
@@ -107,6 +104,42 @@ async function getTrending(type, timePeriod, accessTokenAuthKey) {
         })
     } catch (error) {
         console.log("Failed to pull trending feed")
+        console.log(error)
+        return []
+    }
+}
+
+async function getPopular(page = 1, type, accessTokenAuthKey){
+    let queryURL;
+    switch (type) {
+        case "tv":
+            queryURL = "https://api.themoviedb.org/3/tv/popular"
+            break
+        case "movie":
+            queryURL = "https://api.themoviedb.org/3/movie/popular"
+            break
+        case "people":
+            queryURL = "https://api.themoviedb.org/3/person/popular"
+    }
+
+    let queryParams = {
+        language: "en-US",
+        page: page,
+        region: "US"
+    }
+
+    let headerParameters = {
+        Authorization: `Bearer ${accessTokenAuthKey}`
+    }
+    try {
+        return $.ajax(queryURL, {
+            type: "GET",
+            accepts: "application/json",
+            headers: headerParameters,
+            data: queryParams
+        })
+    } catch (error) {
+        console.log("Failed to complete search request")
         console.log(error)
         return []
     }
