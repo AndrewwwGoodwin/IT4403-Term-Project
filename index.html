@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Movie Search</title>
-    </head>
-    <body>
-        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-        <script src="scripts/main.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search SPA</title>
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Movie and TV Show Search</h1>
+            <select id="search-type">
+                <option value="multi">All</option>
+                <option value="movie">Movies</option>
+                <option value="tv">TV Shows</option>
+                <option value="person">People</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Search for a movie, TV show, or person">
+            <button id="search-button">Search</button>
+            <button id="trending-button">Trending</button>
+        </header>
+        <main>
+            <section id="results"></section>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/TMDBInteraction.js"></script>
+</body>
 </html>

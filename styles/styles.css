@@ -1,0 +1,44 @@
+:root {
+    --main-accent-color: #E5A00D;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(66,69,73);
+    color: whitesmoke;
+}
+
+/* Header Styling */
+header {
+    background-color: rgb(30,33,36);
+    color: whitesmoke;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+header h1 {
+    margin-bottom: 10px;
+}
+header input,
+header select,
+header button {
+    margin: 10px 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+header input,
+header select {
+    flex: 1;
+}
+header input {
+    width: 300px;
+}
+header button {
+    background-color: var(--main-accent-color);
+    color: whitesmoke;
+    cursor: pointer;
+}
