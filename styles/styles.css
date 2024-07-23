@@ -4,22 +4,24 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: rgb(66,69,73);
+    background-color: rgb(66, 69, 73);
     color: whitesmoke;
 }
 
 /* Header Styling */
 header {
-    background-color: rgb(30,33,36);
+    background-color: rgb(30, 33, 36);
     color: whitesmoke;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 header h1 {
     margin-bottom: 10px;
 }
+
 header input,
 header select,
 header button {
@@ -34,9 +36,11 @@ header input,
 header select {
     flex: 1;
 }
+
 header input {
     width: 300px;
 }
+
 header button {
     background-color: var(--main-accent-color);
     color: whitesmoke;
@@ -121,10 +125,11 @@ header button {
 #pagination #page-number {
     display: inline-block;
     padding: 10px 20px;
-    background-color: rgb(30,33,36);
+    background-color: rgb(30, 33, 36);
     color: whitesmoke;
     border-radius: 5px;
 }
+
 /* Modal Styling */
 .modal {
     position: fixed;
@@ -195,6 +200,7 @@ header button {
 #details p {
     margin: 10px 0;
 }
+
 #details h3 {
     margin: 10px 0;
     text-align: center;

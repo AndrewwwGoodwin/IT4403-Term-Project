@@ -1,5 +1,11 @@
 // wow, look at all that js!
 // let's leave this file mostly for interacting with the document/dom/whatever
+
+let currentPage = 1
+let searchInputValue;
+let searchType
+let maxPages;
+
 $(document).ready(async function () {
     // block of example API interaction
     //let token = "access token should go here"
@@ -12,6 +18,9 @@ $(document).ready(async function () {
     // define some globals here that represents HTML elements
     let sortDiv = $("#options");
     let paginationDiv = $("#pagination");
+    let paginationNext = $("#next-page");
+    let paginationPrev = $("#previous-page");
+    let paginationDisplay = $("#page-number");
     let searchTypeElement = $("#search-type");
     let searchInputElement = $("#search-input")
     let trendingSearchElement = $("#trending-button");
@@ -19,22 +28,43 @@ $(document).ready(async function () {
     let popularSearchElement = $("#popular-button");
     let modalExitButtonElement = $("#close-modal");
     let resultsBox = $("#results");
+    let lastSearchDataType;
+
 
     searchSubmitButtonElement.click(async function () {
         // check that the input is valid
-        if (searchInputElement.val() !== "" || searchInputElement.val() !== null) {
+        if (searchInputElement.val() !== "" || searchInputElement.val() !== undefined) {
             resultsBox.empty()
-            let searchInputValue = searchInputElement.val();
-            let searchType = searchTypeElement.val()
+            searchInputValue = searchInputElement.val();
+            searchType = searchTypeElement.val()
             try {
                 let data = await getSearchResults(searchInputValue, searchType, 1)
+                lastSearchDataType = "search"
+                currentPage = 1
+                maxPages = data.total_pages || 1
                 console.log(data)
                 // now that we have our info lets make some tiles
-                DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+                DrawTiles(data, resultsBox, paginationDiv, sortDiv, "search")
             } catch (err) {
                 console.log("Failed to perform a search")
                 console.log(err)
             }
+        }
+    })
+
+    paginationNext.click(async function () {
+        if (currentPage + 1 > 0 && currentPage + 1 <= maxPages) {
+            currentPage += 1
+            paginationDisplay.text(currentPage)
+            await reDrawTiles(currentPage, lastSearchDataType)
+        }
+    })
+
+    paginationPrev.click(async function () {
+        if (currentPage - 1 > 0 && currentPage - 1 <= maxPages) {
+            currentPage -= 1
+            paginationDisplay.text(currentPage)
+            await reDrawTiles(currentPage, lastSearchDataType)
         }
     })
 
@@ -44,7 +74,7 @@ $(document).ready(async function () {
         let searchType = searchTypeElement.val()
         try {
             let data = await getTrending(searchType, "week")
-            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv, "trending")
         } catch (err) {
             console.log("Failed to pull trending")
             console.log(err)
@@ -53,17 +83,17 @@ $(document).ready(async function () {
 
     popularSearchElement.click(async function () {
         resultsBox.empty()
-        let searchType = searchTypeElement.val()
+        searchType = searchTypeElement.val()
         if (searchType === "multi") {
             console.log("popular cant be multi, defaulting to Movies instead")
             searchType = "movie"
-        } else if (searchType === "person") {
-            searchType = "people"
         }
         try {
             let data = await getPopular(1, searchType)
+            lastSearchDataType = "popular"
+            maxPages = data.total_pages
             console.log(data)
-            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv, "popular")
         } catch (err) {
             console.log("Failed to pull Popular")
             console.log(err)
@@ -74,21 +104,54 @@ $(document).ready(async function () {
         console.log("x")
         $(".modal").css("visibility", "hidden")
     })
+
+
+    async function reDrawTiles(newPage, dataType) {
+        let data;
+        switch (dataType) {
+            case "search":
+                console.log(searchInputValue, searchType, newPage)
+                data = await getSearchResults(searchInputValue, searchType, newPage)
+                break
+            case "popular":
+                data = await getPopular(newPage, searchType)
+                break
+        }
+        resultsBox.empty()
+        DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
+    }
+
 })
 
-function DrawTiles(data, resultsBox, paginationDiv, sortDiv) {
+function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
+    switch (datatype) {
+        // for a search we want pagination and sorting options to be visible
+        case "search":
+            if (sortDiv.css("visibility") === "hidden") {
+                sortDiv.css("visibility", "visible")
+            }
+            if (paginationDiv.css("visibility") === "hidden") {
+                paginationDiv.css("visibility", "visible")
+            }
+            break;
 
-    // check if our pagination and sort is visible
-    if (sortDiv.css("visibility") === "hidden") {
-        sortDiv.css("visibility", "visible")
+        // for trending we don't want any buttons to appear
+        case "trending":
+            sortDiv.css("visibility", "hidden")
+            paginationDiv.css("visibility", "hidden")
+            break
+        // and for popular we can have pagination, but that's it.
+        case "popular":
+            sortDiv.css("visibility", "hidden")
+            if (paginationDiv.css("visibility") === "hidden") {
+                paginationDiv.css("visibility", "visible")
+            }
+            break
+        default:
+            break
     }
-    if (paginationDiv.css("visibility") === "hidden") {
-        paginationDiv.css("visibility", "visible")
-    }
-
 
     for (let entry of data.results) {
-
         let imgURL = "https://image.tmdb.org/t/p/original";
         switch (entry.media_type) {
             case "tv":
@@ -114,6 +177,9 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv) {
             .click(async function () {
                 //console.log(entry.id)
                 try {
+                    if (entry.media_type === "people") {
+                        entry.media_type = "person"
+                    }
                     let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
                     console.log(imgURL)
                     DrawDetailedInfoScreen(detailedInfo, entry.media_type, imgURL)
@@ -171,7 +237,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
             const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
             const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
-            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie )
+            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie)
             break
         case "person":
             let gender = {
