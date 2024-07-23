@@ -125,8 +125,9 @@ $(document).ready(async function () {
         resultsBox.empty()
         DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
     }
+
     //whenever a new sort is chosen, redraw the page to match
-    sortDropdown.change(function (){
+    sortDropdown.change(function () {
         sortOption = sortDropdown.find(":selected").val()
         reDrawTiles(currentPage, lastSearchDataType)
     })
@@ -274,33 +275,33 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     $("#details-modal").css("visibility", "visible")
 }
 
-function sortData(data, sortType, datatype){
+function sortData(data, sortType, datatype) {
     let dataToSort = data.results
-    switch(sortType){
+    switch (sortType) {
         case "popularity.desc":
             dataToSort.sort((a, b) => b.popularity - a.popularity)
             break;
-            /*
-        case "release_date.desc":
-            // for tv shows and movies, sort by release date
-            // for people, sort by birthday
-            switch (datatype){
-                case "tv":
-                    dataToSort.sort((a, b) => new Date(a.first_air_date) - new Date(b.first_air_date))
-                    break;
-                case "movie":
-                    dataToSort.sort((a, b) => new Date(a.release_date) - new Date(b.release_date))
-                    break;
-                case "person":
-                    dataToSort.sort((a, b) => new Date(a.birthday) - new Date(b.birthday))
-                    break;
-                default:
-                    break;
-            }
-            break
-            */
+        /*
+    case "release_date.desc":
+        // for tv shows and movies, sort by release date
+        // for people, sort by birthday
+        switch (datatype){
+            case "tv":
+                dataToSort.sort((a, b) => new Date(a.first_air_date) - new Date(b.first_air_date))
+                break;
+            case "movie":
+                dataToSort.sort((a, b) => new Date(a.release_date) - new Date(b.release_date))
+                break;
+            case "person":
+                dataToSort.sort((a, b) => new Date(a.birthday) - new Date(b.birthday))
+                break;
+            default:
+                break;
+        }
+        break
+        */
         case "vote_average.desc":
-            switch (datatype){
+            switch (datatype) {
                 case "tv":
                 case "movie":
                     dataToSort.sort((a, b) => b.vote_average - a.vote_average)
