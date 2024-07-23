@@ -57,8 +57,6 @@ $(document).ready(async function () {
         if (searchType === "multi") {
             console.log("popular cant be multi, defaulting to Movies instead")
             searchType = "movie"
-        } else if (searchType === "person") {
-            searchType = "people"
         }
         try {
             let data = await getPopular(1, searchType)
@@ -114,6 +112,9 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv) {
             .click(async function () {
                 //console.log(entry.id)
                 try {
+                    if(entry.media_type === "people"){
+                        entry.media_type = "person"
+                    }
                     let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
                     console.log(imgURL)
                     DrawDetailedInfoScreen(detailedInfo, entry.media_type, imgURL)

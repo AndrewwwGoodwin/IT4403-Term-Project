@@ -62,6 +62,9 @@ async function getTrending(type, timePeriod) {
 
 // gets popular movies from TMDB. valid types are as follows: ("tv", "movie", "people")
 async function getPopular(page = 1, type){
+    if (type === "person") {
+        type = "people"
+    }
     let queryParams = {
         page: page,
         type: type,
