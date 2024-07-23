@@ -81,3 +81,47 @@ header button {
     text-align: center;
     margin: 10px 0 0;
 }
+
+#options {
+    text-align: left;
+    margin: 20px 0;
+}
+
+#options #sort-header {
+    display: inline;
+    margin-right: 10px;
+}
+
+#sort-options {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-accent-color);
+    color: whitesmoke;
+    cursor: pointer;
+    outline: none;
+}
+
+#pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#pagination button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-accent-color);
+    color: whitesmoke;
+    cursor: pointer;
+    outline: none;
+}
+
+#pagination #page-number {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgb(30,33,36);
+    color: whitesmoke;
+    border-radius: 5px;
+}
