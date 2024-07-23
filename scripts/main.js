@@ -9,7 +9,6 @@ $(document).ready(async function () {
     //let data = await getDetailedInfo(1022789, "movie")
     //console.log(data);
 
-
     // define some globals here that represents HTML elements
     let searchTypeElement = $("#search-type");
     let searchInputElement = $("#search-input")
