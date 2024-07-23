@@ -17,6 +17,7 @@ $(document).ready(async function () {
     let trendingSearchElement = $("#trending-button");
     let searchSubmitButtonElement = $("#search-button");
     let popularSearchElement = $("#popular-button");
+    let modalExitButtonElement = $("#close-modal");
     let resultsBox = $("#results");
 
     searchSubmitButtonElement.click(async function () {
@@ -67,6 +68,11 @@ $(document).ready(async function () {
             console.log("Failed to pull Popular")
             console.log(err)
         }
+    })
+
+    modalExitButtonElement.click(async function () {
+        console.log("x")
+        $(".modal").css("visibility", "hidden")
     })
 })
 
