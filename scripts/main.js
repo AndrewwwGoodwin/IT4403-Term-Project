@@ -34,6 +34,19 @@ $(document).ready(async function () {
             }
         }
     })
+
+    //when we click the "trending" button this block will execute
+    trendingSearchElement.click(async function () {
+        resultsBox.empty()
+        let searchType = searchTypeElement.val()
+        try {
+            let data = await getTrending(searchType,"week")
+            DrawTiles(data, resultsBox)
+        } catch(err) {
+            console.log("Failed to pull trending")
+            console.log(err)
+        }
+    })
 })
 
 
