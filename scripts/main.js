@@ -48,8 +48,6 @@ $(document).ready(async function () {
     })
 })
 
-
-
 function DrawTiles(data, resultsBox){
     for(let entry of data.results){
         let tile = $("<div></div>")
