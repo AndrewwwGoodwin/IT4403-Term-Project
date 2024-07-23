@@ -1,5 +1,11 @@
 // wow, look at all that js!
 // let's leave this file mostly for interacting with the document/dom/whatever
+
+let currentPage = 1
+let searchInputValue;
+let searchType
+let maxPages;
+
 $(document).ready(async function () {
     // block of example API interaction
     //let token = "access token should go here"
@@ -12,6 +18,9 @@ $(document).ready(async function () {
     // define some globals here that represents HTML elements
     let sortDiv = $("#options");
     let paginationDiv = $("#pagination");
+    let paginationNext = $("#next-page");
+    let paginationPrev = $("#previous-page");
+    let paginationDisplay = $("#page-number");
     let searchTypeElement = $("#search-type");
     let searchInputElement = $("#search-input")
     let trendingSearchElement = $("#trending-button");
@@ -19,16 +28,20 @@ $(document).ready(async function () {
     let popularSearchElement = $("#popular-button");
     let modalExitButtonElement = $("#close-modal");
     let resultsBox = $("#results");
-    let currentPage = 1
+    let lastSearchDataType;
+
 
     searchSubmitButtonElement.click(async function () {
         // check that the input is valid
-        if (searchInputElement.val() !== "" || searchInputElement.val() !== null) {
+        if (searchInputElement.val() !== "" || searchInputElement.val() !== undefined) {
             resultsBox.empty()
-            let searchInputValue = searchInputElement.val();
-            let searchType = searchTypeElement.val()
+            searchInputValue = searchInputElement.val();
+            searchType = searchTypeElement.val()
             try {
                 let data = await getSearchResults(searchInputValue, searchType, 1)
+                lastSearchDataType = "search"
+                currentPage = 1
+                maxPages = data.total_pages || 1
                 console.log(data)
                 // now that we have our info lets make some tiles
                 DrawTiles(data, resultsBox, paginationDiv, sortDiv, "search")
@@ -36,6 +49,22 @@ $(document).ready(async function () {
                 console.log("Failed to perform a search")
                 console.log(err)
             }
+        }
+    })
+
+    paginationNext.click(async function () {
+        if (currentPage + 1 > 0 && currentPage + 1 <= maxPages) {
+            currentPage += 1
+            paginationDisplay.text(currentPage)
+            await reDrawTiles(currentPage, lastSearchDataType)
+        }
+    })
+
+    paginationPrev.click(async function () {
+        if (currentPage - 1 > 0 && currentPage - 1 <= maxPages) {
+            currentPage -= 1
+            paginationDisplay.text(currentPage)
+            await reDrawTiles(currentPage, lastSearchDataType)
         }
     })
 
@@ -54,13 +83,15 @@ $(document).ready(async function () {
 
     popularSearchElement.click(async function () {
         resultsBox.empty()
-        let searchType = searchTypeElement.val()
+        searchType = searchTypeElement.val()
         if (searchType === "multi") {
             console.log("popular cant be multi, defaulting to Movies instead")
             searchType = "movie"
         }
         try {
             let data = await getPopular(1, searchType)
+            lastSearchDataType = "popular"
+            maxPages = data.total_pages
             console.log(data)
             DrawTiles(data, resultsBox, paginationDiv, sortDiv, "popular")
         } catch (err) {
@@ -73,8 +104,24 @@ $(document).ready(async function () {
         console.log("x")
         $(".modal").css("visibility", "hidden")
     })
-})
 
+
+async function reDrawTiles(newPage, dataType){
+    let data;
+    switch (dataType) {
+        case "search":
+            console.log(searchInputValue,searchType,newPage)
+            data = await getSearchResults(searchInputValue, searchType, newPage)
+            break
+        case "popular":
+            data = await getPopular(newPage, searchType)
+            break
+    }
+    resultsBox.empty()
+    DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
+}
+
+})
 function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
     switch (datatype) {
         // for a search we want pagination and sorting options to be visible
