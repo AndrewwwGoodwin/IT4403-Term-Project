@@ -19,6 +19,7 @@ $(document).ready(async function () {
     let popularSearchElement = $("#popular-button");
     let modalExitButtonElement = $("#close-modal");
     let resultsBox = $("#results");
+    let currentPage = 1
 
     searchSubmitButtonElement.click(async function () {
         // check that the input is valid
@@ -30,7 +31,7 @@ $(document).ready(async function () {
                 let data = await getSearchResults(searchInputValue, searchType, 1)
                 console.log(data)
                 // now that we have our info lets make some tiles
-                DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+                DrawTiles(data, resultsBox, paginationDiv, sortDiv, "search")
             } catch (err) {
                 console.log("Failed to perform a search")
                 console.log(err)
@@ -44,7 +45,7 @@ $(document).ready(async function () {
         let searchType = searchTypeElement.val()
         try {
             let data = await getTrending(searchType, "week")
-            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv, "trending")
         } catch (err) {
             console.log("Failed to pull trending")
             console.log(err)
@@ -61,7 +62,7 @@ $(document).ready(async function () {
         try {
             let data = await getPopular(1, searchType)
             console.log(data)
-            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv, "popular")
         } catch (err) {
             console.log("Failed to pull Popular")
             console.log(err)
@@ -74,16 +75,33 @@ $(document).ready(async function () {
     })
 })
 
-function DrawTiles(data, resultsBox, paginationDiv, sortDiv) {
+function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
+    switch (datatype) {
+        // for a search we want pagination and sorting options to be visible
+        case "search":
+            if (sortDiv.css("visibility") === "hidden") {
+                sortDiv.css("visibility", "visible")
+            }
+            if (paginationDiv.css("visibility") === "hidden") {
+                paginationDiv.css("visibility", "visible")
+            }
+            break;
 
-    // check if our pagination and sort is visible
-    if (sortDiv.css("visibility") === "hidden") {
-        sortDiv.css("visibility", "visible")
+        // for trending we don't want any buttons to appear
+        case "trending":
+            sortDiv.css("visibility", "hidden")
+            paginationDiv.css("visibility", "hidden")
+            break
+        // and for popular we can have pagination, but that's it.
+        case "popular":
+            sortDiv.css("visibility", "hidden")
+            if(paginationDiv.css("visibility") === "hidden") {
+                paginationDiv.css("visibility", "visible")
+            }
+            break
+        default:
+        break
     }
-    if (paginationDiv.css("visibility") === "hidden") {
-        paginationDiv.css("visibility", "visible")
-    }
-
 
     for (let entry of data.results) {
 
