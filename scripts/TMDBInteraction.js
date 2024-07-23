@@ -20,6 +20,15 @@ async function getSearchResults(searchQuery, searchType, page = 1) {
             accepts: "application/json",
             data: queryParams
         });
+
+        // if type !== multi we need to go in and manually add data.results.entry.media_type
+        if(searchType !== "multi"){
+            let responseData = JSON.parse(data)
+            for (let entry of responseData.results) {
+                entry.media_type = searchType
+            }
+            return responseData;
+        }
         return JSON.parse(data)
     } catch (error) {
         console.log("Failed to complete search request")
