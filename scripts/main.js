@@ -57,8 +57,14 @@ function DrawTiles(data, resultsBox){
                 break
         }
 
-        // need to add a check to see if poster_path exists, and if it doesn't replace with some "missing image" type thing
-        $("<img>").attr("src", imgURL).appendTo(tile)
+        // really, really need a better filler image for this.
+        // checks if the image URL is valid, and if it isn't, inserts a filler image
+        if(imgURL.includes("null")||imgURL.includes("undefined")){
+            $("<img>").attr("src", "./images/MissingCover.png").appendTo(tile)
+
+        } else {
+            $("<img>").attr("src", imgURL).appendTo(tile)
+        }
 
         switch (entry.media_type){
             case "tv":
