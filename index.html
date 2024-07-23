@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,10 +20,27 @@
             </select>
             <button id="search-button">Search</button>
             <button id="trending-button">Trending</button>
+            <button id="popular-button">Popular</button>
         </header>
+        <div id="options">
+            <select id="sort-options">
+                <option value="popularity.desc">Most Popular</option>
+                <option value="release_date.desc">Newest</option>
+                <option value="vote_average.desc">Highest Rated</option>
+            </select>
+            <button id="previous-page">Previous</button>
+            <span id="page-number">1</span>
+            <button id="next-page">Next</button>
+        </div>
         <main>
             <section id="results"></section>
         </main>
+        <div id="details-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="details"></div>
+            </div>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <sc<script src="scripts/main.js"></script>
