@@ -106,22 +106,23 @@ $(document).ready(async function () {
     })
 
 
-async function reDrawTiles(newPage, dataType){
-    let data;
-    switch (dataType) {
-        case "search":
-            console.log(searchInputValue,searchType,newPage)
-            data = await getSearchResults(searchInputValue, searchType, newPage)
-            break
-        case "popular":
-            data = await getPopular(newPage, searchType)
-            break
+    async function reDrawTiles(newPage, dataType) {
+        let data;
+        switch (dataType) {
+            case "search":
+                console.log(searchInputValue, searchType, newPage)
+                data = await getSearchResults(searchInputValue, searchType, newPage)
+                break
+            case "popular":
+                data = await getPopular(newPage, searchType)
+                break
+        }
+        resultsBox.empty()
+        DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
     }
-    resultsBox.empty()
-    DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
-}
 
 })
+
 function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
     switch (datatype) {
         // for a search we want pagination and sorting options to be visible
