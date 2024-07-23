@@ -141,7 +141,7 @@ function getDetailedInfo($id, $type, $accessTokenAuthKey) {
             $queryURL = $baseURL . "tv/";
             break;
         case "people":
-            $queryURL = $baseURL . "people/";
+            $queryURL = $baseURL . "person/";
             break;
         default:
             error_log("Invalid Query Type: " . $type);
