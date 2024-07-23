@@ -10,6 +10,8 @@ $(document).ready(async function () {
     //console.log(data);
 
     // define some globals here that represents HTML elements
+    let sortDiv = $("#options");
+    let paginationDiv = $("#pagination");
     let searchTypeElement = $("#search-type");
     let searchInputElement = $("#search-input")
     let trendingSearchElement = $("#trending-button");
@@ -27,7 +29,7 @@ $(document).ready(async function () {
                 let data = await getSearchResults(searchInputValue, searchType, 1)
                 console.log(data)
                 // now that we have our info lets make some tiles
-                DrawTiles(data, resultsBox)
+                DrawTiles(data, resultsBox, paginationDiv, sortDiv)
             } catch(err) {
                 console.log("Failed to perform a search")
                 console.log(err)
@@ -41,7 +43,7 @@ $(document).ready(async function () {
         let searchType = searchTypeElement.val()
         try {
             let data = await getTrending(searchType,"week")
-            DrawTiles(data, resultsBox)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
         } catch(err) {
             console.log("Failed to pull trending")
             console.log(err)
@@ -60,7 +62,7 @@ $(document).ready(async function () {
         try {
             let data = await getPopular(1,searchType)
             console.log(data)
-            DrawTiles(data, resultsBox)
+            DrawTiles(data, resultsBox, paginationDiv, sortDiv)
         } catch(err) {
             console.log("Failed to pull Popular")
             console.log(err)
@@ -68,7 +70,16 @@ $(document).ready(async function () {
     })
 })
 
-function DrawTiles(data, resultsBox){
+function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
+
+    // check if our pagination and sort is visible
+    if(sortDiv.css("visibility") === "hidden"){
+        sortDiv.css("visibility", "visible")
+    }
+    if (paginationDiv.css("visibility") === "hidden"){
+        paginationDiv.css("visibility", "visible")
+    }
+
     for(let entry of data.results){
         let tile = $("<div></div>")
             .attr("class", "resultsCard")
