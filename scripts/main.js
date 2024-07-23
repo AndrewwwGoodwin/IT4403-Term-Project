@@ -84,7 +84,17 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
         let tile = $("<div></div>")
             .attr("class", "resultsCard")
             .attr("id", entry.id)
-            .appendTo(resultsBox);
+            .appendTo(resultsBox)
+            .click(async function (){
+                //console.log(entry.id)
+                try {
+                    let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
+                    DrawDetailedInfoScreen(detailedInfo)
+                } catch(err){
+                    console.log("failed to pull detailed info for " + entry.id)
+                    console.log(err)
+                }
+            });
         let imgURL = "https://image.tmdb.org/t/p/original";
         switch(entry.media_type) {
             case "tv":
@@ -119,4 +129,8 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
                 break
         }
     }
+}
+
+function DrawDetailedInfoScreen(detailedInfo) {
+    console.log(detailedInfo);
 }
