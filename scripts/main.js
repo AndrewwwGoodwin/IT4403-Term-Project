@@ -141,30 +141,30 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     switch (mediaType) {
         case "tv":
             const titleTV = $("<h2>").text(detailedInfo.name || "")
-            const imageTV = $("<img>").attr("src", imageURL)
-            const popularityScoreTV = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
-            const voteAvgTV = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
-            const voteCountTV = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
-            const firstAirDateTV = $("<p>").text("First Air Date: " + detailedInfo.first_air_date || "")
-            const seasonCountTV = $("<p>").text("Season Count: " + detailedInfo.number_of_seasons || "")
-            const episodeCountTV = $("<p>").text("Episode Count: " + detailedInfo.number_of_episodes || "")
-            const overviewTextTV = $("<p>").text("Overview: " + detailedInfo.overview || "")
-            const mediaTypeTV = $("<p>").text("Media Type: TV Show")
+            const imageTV = $("<img>").attr("src", imageURL).attr("id", "modalImg")
+            const popularityScoreTV = $("<p>").html("<b>Popularity Score:</b> " + detailedInfo.popularity || "")
+            const voteAvgTV = $("<p>").html("<b>Average Rating:</b> " + detailedInfo.vote_average || "")
+            const voteCountTV = $("<p>").html("<b>Rating Count:</b> " + detailedInfo.vote_count || "")
+            const firstAirDateTV = $("<p>").html("<b>First Air Date:</b> " + detailedInfo.first_air_date || "")
+            const seasonCountTV = $("<p>").html("<b>Season Count:</b> " + detailedInfo.number_of_seasons || "")
+            const episodeCountTV = $("<p>").html("<b>Episode Count:</b> " + detailedInfo.number_of_episodes || "")
+            const overviewTextTV = $("<p>").html("<b>Overview:</b><br> " + detailedInfo.overview || "")
+            const mediaTypeTV = $("<p>").html("<b>Media Type:</b> TV Show")
             detailsDiv.append(titleTV, imageTV, popularityScoreTV, voteAvgTV, voteCountTV, firstAirDateTV, seasonCountTV, episodeCountTV, overviewTextTV, mediaTypeTV)
             break;
         case "movie":
             //title
             const titleMovie = $("<h2>").text(detailedInfo.title || "")
-            const taglineMovie = $("<p>").text(detailedInfo.tagline || "")
+            const taglineMovie = $("<h3>").text(detailedInfo.tagline || "")
             const imageMovie = $("<img>").attr("src", imageURL)
-            const popularityScoreMovie = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
-            const voteAvgMovie = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
-            const voteCountMovie = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
-            const statusMovie = $("<p>").text("Status: " + detailedInfo.status || "")
-            const releaseDateMovie = $().text("Release Date: " + detailedInfo.release_date || "")
-            const runtimeMovie = $("<p>").text("Runtime: " + detailedInfo.runtime + " Minutes" || "")
-            const overviewTextMovie = $("<p>").text("Overview: " + detailedInfo.overview || "")
-            const mediaTypeMovie = $("<p>").text("Media Type: Movie")
+            const popularityScoreMovie = $("<p>").html("<b>Popularity Score:</b> " + detailedInfo.popularity || "")
+            const voteAvgMovie = $("<p>").html("<b>Average Rating:</b> " + detailedInfo.vote_average || "")
+            const voteCountMovie = $("<p>").html("<b>Rating Count:</b> " + detailedInfo.vote_count || "")
+            const statusMovie = $("<p>").html("<b>Status:</b> " + detailedInfo.status || "")
+            const releaseDateMovie = $().html("<b>Release Date:</b> " + detailedInfo.release_date || "")
+            const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
+            const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
+            const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
             detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie )
             break
         case "person":
@@ -173,13 +173,13 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
                 1: "Female",
                 2: "Male"
             }
-            const namePerson = $("<p>").text(detailedInfo.name || "")
+            const namePerson = $("<h2>").text(detailedInfo.name || "")
             const imagePerson = $("<img>").attr("src", imageURL)
-            const popularityPerson = $("<p>").text("Popularity Score: " + detailedInfo.popularity)
-            const knownForPerson = $("<p>").text("Known For: " + detailedInfo.known_for_department || "")
-            const genderPerson = $("<p>").text("Gender: " + gender[detailedInfo.gender].toString() || "")
-            const birthdayPerson = $("<p>").text("Birthday: " + detailedInfo.birthday || "")
-            const biographyPerson = $("<p>").text("Biography: " + detailedInfo.biography || "")
+            const popularityPerson = $("<p>").html("<b>Popularity Score:</b> " + detailedInfo.popularity)
+            const knownForPerson = $("<p>").html("<b>Known For:</b> " + detailedInfo.known_for_department || "")
+            const genderPerson = $("<p>").html("<b>Gender:</b> " + gender[detailedInfo.gender].toString() || "")
+            const birthdayPerson = $("<p>").html("<b>Birthday:</b> " + detailedInfo.birthday || "")
+            const biographyPerson = $("<p>").html("<b>Biography:</b> <br> " + detailedInfo.biography || "")
             detailsDiv.append(namePerson, imagePerson, popularityPerson, birthdayPerson, genderPerson, knownForPerson, biographyPerson)
             break
         default:
@@ -188,5 +188,5 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     }
 
     // Show the modal
-    $("#details-modal").show();
+    $("#details-modal").css("visibility", "visible")
 }
