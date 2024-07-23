@@ -22,7 +22,7 @@ async function getSearchResults(searchQuery, searchType, page = 1) {
         });
 
         // if type !== multi we need to go in and manually add data.results.entry.media_type
-        if(searchType !== "multi"){
+        if (searchType !== "multi") {
             let responseData = JSON.parse(data)
             for (let entry of responseData.results) {
                 entry.media_type = searchType
@@ -61,7 +61,7 @@ async function getTrending(type, timePeriod) {
 }
 
 // gets popular movies from TMDB. valid types are as follows: ("tv", "movie", "people")
-async function getPopular(page = 1, type){
+async function getPopular(page = 1, type) {
     if (type === "person") {
         type = "people"
     }
@@ -78,7 +78,7 @@ async function getPopular(page = 1, type){
         })
 
         // if type !== multi we need to go in and manually add data.results.entry.media_type
-        if(type !== "multi"){
+        if (type !== "multi") {
             let responseData = JSON.parse(data)
             for (let entry of responseData.results) {
                 entry.media_type = type
@@ -95,7 +95,7 @@ async function getPopular(page = 1, type){
 }
 
 //gets detailed information from TMDB. Valid type are: ("tv", "movie", "people")
-async function getDetailedInfo(id,type){
+async function getDetailedInfo(id, type) {
     let queryParams = {
         requestType: "getDetailedInfo",
         id: id,

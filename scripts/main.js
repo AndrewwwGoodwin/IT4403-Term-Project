@@ -95,16 +95,15 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
         // and for popular we can have pagination, but that's it.
         case "popular":
             sortDiv.css("visibility", "hidden")
-            if(paginationDiv.css("visibility") === "hidden") {
+            if (paginationDiv.css("visibility") === "hidden") {
                 paginationDiv.css("visibility", "visible")
             }
             break
         default:
-        break
+            break
     }
 
     for (let entry of data.results) {
-
         let imgURL = "https://image.tmdb.org/t/p/original";
         switch (entry.media_type) {
             case "tv":
@@ -130,7 +129,7 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
             .click(async function () {
                 //console.log(entry.id)
                 try {
-                    if(entry.media_type === "people"){
+                    if (entry.media_type === "people") {
                         entry.media_type = "person"
                     }
                     let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
@@ -190,7 +189,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
             const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
             const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
-            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie )
+            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie)
             break
         case "person":
             let gender = {
