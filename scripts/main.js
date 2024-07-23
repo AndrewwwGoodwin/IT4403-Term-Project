@@ -5,6 +5,7 @@ let currentPage = 1
 let searchInputValue;
 let searchType
 let maxPages;
+let sortOption;
 
 $(document).ready(async function () {
     // block of example API interaction
@@ -16,6 +17,7 @@ $(document).ready(async function () {
     //console.log(data);
 
     // define some globals here that represents HTML elements
+    let sortDropdown = $("#sort-options")
     let sortDiv = $("#options");
     let paginationDiv = $("#pagination");
     let paginationNext = $("#next-page");
@@ -37,6 +39,7 @@ $(document).ready(async function () {
             resultsBox.empty()
             searchInputValue = searchInputElement.val();
             searchType = searchTypeElement.val()
+            sortOption = sortDropdown.find(":selected").val()
             try {
                 let data = await getSearchResults(searchInputValue, searchType, 1)
                 lastSearchDataType = "search"
@@ -71,6 +74,7 @@ $(document).ready(async function () {
     //when we click the "trending" button this block will execute
     trendingSearchElement.click(async function () {
         resultsBox.empty()
+        sortOption = "none"
         let searchType = searchTypeElement.val()
         try {
             let data = await getTrending(searchType, "week")
@@ -83,6 +87,7 @@ $(document).ready(async function () {
 
     popularSearchElement.click(async function () {
         resultsBox.empty()
+        sortOption = "none"
         searchType = searchTypeElement.val()
         if (searchType === "multi") {
             console.log("popular cant be multi, defaulting to Movies instead")
@@ -105,9 +110,9 @@ $(document).ready(async function () {
         $(".modal").css("visibility", "hidden")
     })
 
-
     async function reDrawTiles(newPage, dataType) {
         let data;
+        sortOption = sortDropdown.find(":selected").val()
         switch (dataType) {
             case "search":
                 console.log(searchInputValue, searchType, newPage)
@@ -120,7 +125,11 @@ $(document).ready(async function () {
         resultsBox.empty()
         DrawTiles(data, resultsBox, paginationDiv, sortDiv, dataType)
     }
-
+    //whenever a new sort is chosen, redraw the page to match
+    sortDropdown.change(function (){
+        sortOption = sortDropdown.find(":selected").val()
+        reDrawTiles(currentPage, lastSearchDataType)
+    })
 })
 
 function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
@@ -150,6 +159,8 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv, datatype) {
         default:
             break
     }
+    let sortType = sortOption || "none"
+    data = sortData(data, sortType)
 
     for (let entry of data.results) {
         let imgURL = "https://image.tmdb.org/t/p/original";
@@ -261,4 +272,51 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
 
     // Show the modal
     $("#details-modal").css("visibility", "visible")
+}
+
+function sortData(data, sortType, datatype){
+    let dataToSort = data.results
+    switch(sortType){
+        case "popularity.desc":
+            dataToSort.sort((a, b) => b.popularity - a.popularity)
+            break;
+            /*
+        case "release_date.desc":
+            // for tv shows and movies, sort by release date
+            // for people, sort by birthday
+            switch (datatype){
+                case "tv":
+                    dataToSort.sort((a, b) => new Date(a.first_air_date) - new Date(b.first_air_date))
+                    break;
+                case "movie":
+                    dataToSort.sort((a, b) => new Date(a.release_date) - new Date(b.release_date))
+                    break;
+                case "person":
+                    dataToSort.sort((a, b) => new Date(a.birthday) - new Date(b.birthday))
+                    break;
+                default:
+                    break;
+            }
+            break
+            */
+        case "vote_average.desc":
+            switch (datatype){
+                case "tv":
+                case "movie":
+                    dataToSort.sort((a, b) => b.vote_average - a.vote_average)
+                    break;
+                case "person":
+                    // change sorting when working on a person to just popularity again
+                    dataToSort.sort((a, b) => b.popularity - a.popularity)
+                    break;
+                default:
+                    break
+            }
+
+            break
+        default:
+            return data
+    }
+    data.results = dataToSort
+    return data
 }
