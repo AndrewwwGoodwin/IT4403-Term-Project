@@ -73,6 +73,16 @@ async function getPopular(page = 1, type){
             accepts: "application/json",
             data: queryParams
         })
+
+        // if type !== multi we need to go in and manually add data.results.entry.media_type
+        if(type !== "multi"){
+            let responseData = JSON.parse(data)
+            for (let entry of responseData.results) {
+                entry.media_type = type
+            }
+            return responseData;
+        }
+
         return JSON.parse(data)
     } catch (error) {
         console.log("Failed to complete search request")

@@ -14,6 +14,7 @@ $(document).ready(async function () {
     let searchInputElement = $("#search-input")
     let trendingSearchElement = $("#trending-button");
     let searchSubmitButtonElement = $("#search-button");
+    let popularSearchElement = $("#popular-button");
     let resultsBox = $("#results");
 
     searchSubmitButtonElement.click(async function () {
@@ -43,6 +44,25 @@ $(document).ready(async function () {
             DrawTiles(data, resultsBox)
         } catch(err) {
             console.log("Failed to pull trending")
+            console.log(err)
+        }
+    })
+
+    popularSearchElement.click(async function () {
+        resultsBox.empty()
+        let searchType = searchTypeElement.val()
+        if (searchType === "multi") {
+            console.log("popular cant be multi, defaulting to Movies instead")
+            searchType = "movie"
+        } else if (searchType === "person"){
+            searchType = "people"
+        }
+        try {
+            let data = await getPopular(1,searchType)
+            console.log(data)
+            DrawTiles(data, resultsBox)
+        } catch(err) {
+            console.log("Failed to pull Popular")
             console.log(err)
         }
     })
