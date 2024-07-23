@@ -140,7 +140,7 @@ function getDetailedInfo($id, $type, $accessTokenAuthKey) {
         case "tv":
             $queryURL = $baseURL . "tv/";
             break;
-        case "people":
+        case "person":
             $queryURL = $baseURL . "person/";
             break;
         default:
