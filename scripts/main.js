@@ -140,19 +140,32 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     detailsDiv.empty();
     switch (mediaType) {
         case "tv":
-            const title = $("<h2>").text(detailedInfo.name || "")
-            const image = $("<img>").attr("src", imageURL)
-            const popularityScore = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
-            const voteAvg = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
-            const voteCount = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
-            const firstAirDate = $("<p>").text("First Air Date: " + detailedInfo.first_air_date || "")
-            const seasonCount = $("<p>").text("Season Count: " + detailedInfo.number_of_seasons || "")
-            const episodeCount = $("<p>").text("Episode Count: " + detailedInfo.number_of_episodes || "")
-            const overviewText = $("<p>").text("Overview: " + detailedInfo.overview || "")
-            const mediaType = $("<p>").text("Media Type: TV Show")
-            detailsDiv.append(title, image, popularityScore, voteAvg, voteCount, firstAirDate, seasonCount, episodeCount, overviewText, mediaType)
+            const titleTV = $("<h2>").text(detailedInfo.name || "")
+            const imageTV = $("<img>").attr("src", imageURL)
+            const popularityScoreTV = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
+            const voteAvgTV = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
+            const voteCountTV = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
+            const firstAirDateTV = $("<p>").text("First Air Date: " + detailedInfo.first_air_date || "")
+            const seasonCountTV = $("<p>").text("Season Count: " + detailedInfo.number_of_seasons || "")
+            const episodeCountTV = $("<p>").text("Episode Count: " + detailedInfo.number_of_episodes || "")
+            const overviewTextTV = $("<p>").text("Overview: " + detailedInfo.overview || "")
+            const mediaTypeTV = $("<p>").text("Media Type: TV Show")
+            detailsDiv.append(titleTV, imageTV, popularityScoreTV, voteAvgTV, voteCountTV, firstAirDateTV, seasonCountTV, episodeCountTV, overviewTextTV, mediaTypeTV)
             break;
         case "movie":
+            //title
+            const titleMovie = $("<h2>").text(detailedInfo.title || "")
+            const taglineMovie = $("<p>").text(detailedInfo.tagline || "")
+            const imageMovie = $("<img>").attr("src", imageURL)
+            const popularityScoreMovie = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
+            const voteAvgMovie = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
+            const voteCountMovie = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
+            const statusMovie = $("<p>").text("Status: " + detailedInfo.status || "")
+            const releaseDateMovie = $().text("Release Date: " + detailedInfo.release_date || "")
+            const runtimeMovie = $("<p>").text("Runtime: " + detailedInfo.runtime + " Minutes" || "")
+            const overviewTextMovie = $("<p>").text("Overview: " + detailedInfo.overview || "")
+            const mediaTypeMovie = $("<p>").text("Media Type: Movie")
+            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie )
             break
         case "person":
             break
