@@ -168,6 +168,19 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie )
             break
         case "person":
+            let gender = {
+                0: "Other",
+                1: "Female",
+                2: "Male"
+            }
+            const namePerson = $("<p>").text(detailedInfo.name || "")
+            const imagePerson = $("<img>").attr("src", imageURL)
+            const popularityPerson = $("<p>").text("Popularity Score: " + detailedInfo.popularity)
+            const knownForPerson = $("<p>").text("Known For: " + detailedInfo.known_for_department || "")
+            const genderPerson = $("<p>").text("Gender: " + gender[detailedInfo.gender].toString() || "")
+            const birthdayPerson = $("<p>").text("Birthday: " + detailedInfo.birthday || "")
+            const biographyPerson = $("<p>").text("Biography: " + detailedInfo.biography || "")
+            detailsDiv.append(namePerson, imagePerson, popularityPerson, birthdayPerson, genderPerson, knownForPerson, biographyPerson)
             break
         default:
             console.log("Failed to display detailed info for " + mediaType);
