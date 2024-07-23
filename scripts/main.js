@@ -21,7 +21,7 @@ $(document).ready(async function () {
 
     searchSubmitButtonElement.click(async function () {
         // check that the input is valid
-        if(searchInputElement.val() !== "" || searchInputElement.val() !== null){
+        if (searchInputElement.val() !== "" || searchInputElement.val() !== null) {
             resultsBox.empty()
             let searchInputValue = searchInputElement.val();
             let searchType = searchTypeElement.val()
@@ -30,7 +30,7 @@ $(document).ready(async function () {
                 console.log(data)
                 // now that we have our info lets make some tiles
                 DrawTiles(data, resultsBox, paginationDiv, sortDiv)
-            } catch(err) {
+            } catch (err) {
                 console.log("Failed to perform a search")
                 console.log(err)
             }
@@ -42,9 +42,9 @@ $(document).ready(async function () {
         resultsBox.empty()
         let searchType = searchTypeElement.val()
         try {
-            let data = await getTrending(searchType,"week")
+            let data = await getTrending(searchType, "week")
             DrawTiles(data, resultsBox, paginationDiv, sortDiv)
-        } catch(err) {
+        } catch (err) {
             console.log("Failed to pull trending")
             console.log(err)
         }
@@ -56,47 +56,35 @@ $(document).ready(async function () {
         if (searchType === "multi") {
             console.log("popular cant be multi, defaulting to Movies instead")
             searchType = "movie"
-        } else if (searchType === "person"){
+        } else if (searchType === "person") {
             searchType = "people"
         }
         try {
-            let data = await getPopular(1,searchType)
+            let data = await getPopular(1, searchType)
             console.log(data)
             DrawTiles(data, resultsBox, paginationDiv, sortDiv)
-        } catch(err) {
+        } catch (err) {
             console.log("Failed to pull Popular")
             console.log(err)
         }
     })
 })
 
-function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
+function DrawTiles(data, resultsBox, paginationDiv, sortDiv) {
 
     // check if our pagination and sort is visible
-    if(sortDiv.css("visibility") === "hidden"){
+    if (sortDiv.css("visibility") === "hidden") {
         sortDiv.css("visibility", "visible")
     }
-    if (paginationDiv.css("visibility") === "hidden"){
+    if (paginationDiv.css("visibility") === "hidden") {
         paginationDiv.css("visibility", "visible")
     }
 
-    for(let entry of data.results){
-        let tile = $("<div></div>")
-            .attr("class", "resultsCard")
-            .attr("id", entry.id)
-            .appendTo(resultsBox)
-            .click(async function (){
-                //console.log(entry.id)
-                try {
-                    let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
-                    DrawDetailedInfoScreen(detailedInfo)
-                } catch(err){
-                    console.log("failed to pull detailed info for " + entry.id)
-                    console.log(err)
-                }
-            });
+
+    for (let entry of data.results) {
+
         let imgURL = "https://image.tmdb.org/t/p/original";
-        switch(entry.media_type) {
+        switch (entry.media_type) {
             case "tv":
                 imgURL += entry.poster_path;
                 break
@@ -108,16 +96,29 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
                 break
         }
 
-        // really, really need a better filler image for this.
-        // checks if the image URL is valid, and if it isn't, inserts a filler image
-        if(imgURL.includes("null")||imgURL.includes("undefined")){
-            $("<img>").attr("src", "./images/MissingCover.png").appendTo(tile)
-
-        } else {
-            $("<img>").attr("src", imgURL).appendTo(tile)
+        if (imgURL.includes("null") || imgURL.includes("undefined")) {
+            imgURL = "./images/MissingCover.png"
         }
+        let image = $("<img>").attr("src", imgURL)
 
-        switch (entry.media_type){
+        let tile = $("<div></div>")
+            .attr("class", "resultsCard")
+            .attr("id", entry.id)
+            .appendTo(resultsBox)
+            .click(async function () {
+                //console.log(entry.id)
+                try {
+                    let detailedInfo = await getDetailedInfo(entry.id, entry.media_type)
+                    console.log(imgURL)
+                    DrawDetailedInfoScreen(detailedInfo, entry.media_type, imgURL)
+                } catch (err) {
+                    console.log("failed to pull detailed info for " + entry.id)
+                    console.log(err)
+                }
+            });
+        image.appendTo(tile)
+
+        switch (entry.media_type) {
             case "tv":
                 $("<p>").appendTo(tile).html(entry.name)
                 break
@@ -131,6 +132,35 @@ function DrawTiles(data, resultsBox, paginationDiv, sortDiv){
     }
 }
 
-function DrawDetailedInfoScreen(detailedInfo) {
+function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     console.log(detailedInfo);
+    console.log(mediaType)
+    // Populate modal with detailed information
+    const detailsDiv = $("#details");
+    detailsDiv.empty();
+    switch (mediaType) {
+        case "tv":
+            const title = $("<h2>").text(detailedInfo.name || "")
+            const image = $("<img>").attr("src", imageURL)
+            const popularityScore = $("<p>").text("Popularity Score: " + detailedInfo.popularity || "")
+            const voteAvg = $("<p>").text("Average Rating: " + detailedInfo.vote_average || "")
+            const voteCount = $("<p>").text("Rating Count: " + detailedInfo.vote_count || "")
+            const firstAirDate = $("<p>").text("First Air Date: " + detailedInfo.first_air_date || "")
+            const seasonCount = $("<p>").text("Season Count: " + detailedInfo.number_of_seasons || "")
+            const episodeCount = $("<p>").text("Episode Count: " + detailedInfo.number_of_episodes || "")
+            const overviewText = $("<p>").text("Overview: " + detailedInfo.overview || "")
+            const mediaType = $("<p>").text("Media Type: TV Show")
+            detailsDiv.append(title, image, popularityScore, voteAvg, voteCount, firstAirDate, seasonCount, episodeCount, overviewText, mediaType)
+            break;
+        case "movie":
+            break
+        case "person":
+            break
+        default:
+            console.log("Failed to display detailed info for " + mediaType);
+            return []
+    }
+
+    // Show the modal
+    $("#details-modal").show();
 }
