@@ -60,7 +60,6 @@ header button {
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    user-drag: none;
     user-select: none;
 }
 
@@ -72,7 +71,6 @@ header button {
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    user-drag: none;
     user-select: none;
 }
 
@@ -126,4 +124,78 @@ header button {
     background-color: rgb(30,33,36);
     color: whitesmoke;
     border-radius: 5px;
+}
+/* Modal Styling */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #1c1c1c;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: whitesmoke;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#details {
+    text-align: left;
+    width: 100%;
+}
+
+#details h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+#details img {
+    display: block;
+    margin: 0 auto 20px;
+    width: 30%;
+    height: auto;
+    border-bottom: 2px solid var(--main-accent-color);
+}
+
+#details p {
+    margin: 10px 0;
+}
+#details h3 {
+    margin: 10px 0;
+    text-align: center;
 }
