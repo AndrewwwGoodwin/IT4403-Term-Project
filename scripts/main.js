@@ -291,8 +291,8 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
                 let targetObject = {
                     "id": detailedInfo.id,
                     "dataType": mediaType,
-                    "imgURL": imageURL,
-                    "name": detailedInfo.name
+                    "imageURL": imageURL,
+                    "name": detailedInfo.title
                 }
                 const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
                 if (!exists) {
