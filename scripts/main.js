@@ -6,6 +6,7 @@ let searchInputValue;
 let searchType
 let maxPages;
 let sortOption;
+let watchlist = []
 
 $(document).ready(async function () {
     // block of example API interaction
@@ -30,6 +31,7 @@ $(document).ready(async function () {
     let popularSearchElement = $("#popular-button");
     let modalExitButtonElement = $("#close-modal");
     let resultsBox = $("#results");
+    let watchlistButton = $("#watchlist-button");
     let lastSearchDataType;
 
 
@@ -108,6 +110,15 @@ $(document).ready(async function () {
     modalExitButtonElement.click(async function () {
         console.log("x")
         $(".modal").css("visibility", "hidden")
+    })
+
+    $("#close-watchlist").click(function () {
+        $("#watchlist-modal").css("visibility", "hidden");
+    });
+
+    watchlistButton.click(async function(){
+        // open the watchlist
+        DrawWatchlistScreen(watchlist)
     })
 
     async function reDrawTiles(newPage, dataType) {
@@ -234,7 +245,26 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const episodeCountTV = $("<p>").html("<b>Episode Count:</b> " + detailedInfo.number_of_episodes || "")
             const overviewTextTV = $("<p>").html("<b>Overview:</b><br> " + detailedInfo.overview || "")
             const mediaTypeTV = $("<p>").html("<b>Media Type:</b> TV Show")
-            detailsDiv.append(titleTV, imageTV, popularityScoreTV, voteAvgTV, voteCountTV, firstAirDateTV, seasonCountTV, episodeCountTV, overviewTextTV, mediaTypeTV)
+            const toggleToWatchListTV = $("<button>").text("Add to Watch List").on("click", function () {
+                // check if item is already in the watchlist
+                let targetObject = {
+                    "id":detailedInfo.id,
+                    "dataType":mediaType,
+                    "imageURL":imageURL,
+                    "name":detailedInfo.name
+                }
+                const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
+                if (!exists){
+                    watchlist.push(targetObject)
+                    toggleToWatchListTV.text("Remove from WatchList")
+                } else {
+                    watchlist = watchlist.filter(item => !(item.id === targetObject.id && item.dataType === targetObject.dataType));
+                    toggleToWatchListTV.text("Add to WatchList")
+                }
+
+            })
+            detailsDiv.append(titleTV, imageTV, popularityScoreTV, voteAvgTV, voteCountTV, firstAirDateTV, seasonCountTV, episodeCountTV, overviewTextTV, mediaTypeTV, toggleToWatchListTV)
+
             break;
         case "movie":
             //title
@@ -249,7 +279,25 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
             const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
             const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
-            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie)
+            const toggleToWatchListMovie = $("<button>").text("Add to Watch List").on("click", function() {
+                // check if item is already in the watchlist
+                let targetObject = {
+                    "id":detailedInfo.id,
+                    "dataType":mediaType,
+                    "imgURL":imageURL,
+                    "name":detailedInfo.name
+                }
+                const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
+                if (!exists){
+                    watchlist.push(targetObject)
+                    toggleToWatchListMovie.text("Remove from WatchList")
+                } else {
+                    watchlist = watchlist.filter(item => !(item.id === targetObject.id && item.dataType === targetObject.dataType));
+                    toggleToWatchListMovie.text("Add to WatchList")
+                }
+
+            })
+            detailsDiv.append(titleMovie, taglineMovie, imageMovie, popularityScoreMovie, voteAvgMovie, voteCountMovie, statusMovie, releaseDateMovie, runtimeMovie, overviewTextMovie, mediaTypeMovie, toggleToWatchListMovie)
             break
         case "person":
             let gender = {
@@ -264,7 +312,24 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const genderPerson = $("<p>").html("<b>Gender:</b> " + gender[detailedInfo.gender].toString() || "")
             const birthdayPerson = $("<p>").html("<b>Birthday:</b> " + detailedInfo.birthday || "")
             const biographyPerson = $("<p>").html("<b>Biography:</b> <br> " + detailedInfo.biography || "")
-            detailsDiv.append(namePerson, imagePerson, popularityPerson, birthdayPerson, genderPerson, knownForPerson, biographyPerson)
+            const toggleToWatchListPerson = $("<button>").text("Add to Watch List").on("click", function () {
+                // check if item is already in the watchlist
+                let targetObject = {
+                    "id":detailedInfo.id,
+                    "dataType":mediaType,
+                    "imageURL":imageURL,
+                    "name":detailedInfo.name
+                }
+                const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
+                if (!exists){
+                    watchlist.push(targetObject)
+                    toggleToWatchListPerson.text("Remove from WatchList")
+                } else {
+                    watchlist = watchlist.filter(item => !(item.id === targetObject.id && item.dataType === targetObject.dataType));
+                    toggleToWatchListPerson.text("Add to WatchList")
+                }
+            })
+            detailsDiv.append(namePerson, imagePerson, popularityPerson, birthdayPerson, genderPerson, knownForPerson, biographyPerson, toggleToWatchListPerson)
             break
         default:
             console.log("Failed to display detailed info for " + mediaType);
@@ -273,6 +338,40 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
 
     // Show the modal
     $("#details-modal").css("visibility", "visible")
+}
+
+function DrawWatchlistScreen(watchlist) {
+    const watchlistDetails = $("#watchlist-details");
+    watchlistDetails.empty(); // Clear the current content
+
+    for (let item of watchlist) {
+        // Create the tile element
+        const tile = $("<div></div>")
+            .attr("class", "resultsCard")
+            .attr("id", item.id)
+            .appendTo(watchlistDetails)
+            .click(async function () {
+                try {
+                    let detailedInfo = await getDetailedInfo(item.id, item.dataType);
+                    DrawDetailedInfoScreen(detailedInfo, item.dataType, item.imageURL);
+                    $("#watchlist-modal").css("visibility", "hidden");
+                } catch (err) {
+                    console.log("Failed to pull detailed info for " + item.id);
+                    console.log(err);
+                }
+            });
+
+        // Create and append the image
+        const image = $("<img>").attr("src", item.imageURL);
+        image.appendTo(tile);
+
+        // Create and append the title
+        const title = $("<p>").html(item.name || "No Title");
+        title.appendTo(tile);
+    }
+
+    // Show the watchlist modal
+    $("#watchlist-modal").css("visibility", "visible");
 }
 
 function sortData(data, sortType, datatype) {
