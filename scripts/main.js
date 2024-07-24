@@ -116,7 +116,7 @@ $(document).ready(async function () {
         $("#watchlist-modal").css("visibility", "hidden");
     });
 
-    watchlistButton.click(async function(){
+    watchlistButton.click(async function () {
         // open the watchlist
         DrawWatchlistScreen(watchlist)
     })
@@ -235,7 +235,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     detailsDiv.empty();
     const itemInWatchlist = watchlist.some(item => item.id === detailedInfo.id);
     let watchListText;
-    if(itemInWatchlist){
+    if (itemInWatchlist) {
         watchListText = "Remove from Watch List";
     } else {
         watchListText = "Add to Watch List";
@@ -255,13 +255,13 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const toggleToWatchListTV = $("<button>").text(watchListText).on("click", function () {
                 // check if item is already in the watchlist
                 let targetObject = {
-                    "id":detailedInfo.id,
-                    "dataType":mediaType,
-                    "imageURL":imageURL,
-                    "name":detailedInfo.name
+                    "id": detailedInfo.id,
+                    "dataType": mediaType,
+                    "imageURL": imageURL,
+                    "name": detailedInfo.name
                 }
                 const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
-                if (!exists){
+                if (!exists) {
                     watchlist.push(targetObject)
                     toggleToWatchListTV.text("Remove from WatchList")
                 } else {
@@ -286,16 +286,16 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
             const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
             const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
-            const toggleToWatchListMovie = $("<button>").text(watchListText).on("click", function() {
+            const toggleToWatchListMovie = $("<button>").text(watchListText).on("click", function () {
                 // check if item is already in the watchlist
                 let targetObject = {
-                    "id":detailedInfo.id,
-                    "dataType":mediaType,
-                    "imgURL":imageURL,
-                    "name":detailedInfo.name
+                    "id": detailedInfo.id,
+                    "dataType": mediaType,
+                    "imgURL": imageURL,
+                    "name": detailedInfo.name
                 }
                 const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
-                if (!exists){
+                if (!exists) {
                     watchlist.push(targetObject)
                     toggleToWatchListMovie.text("Remove from WatchList")
                 } else {
@@ -322,13 +322,13 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const toggleToWatchListPerson = $("<button>").text(watchListText).on("click", function () {
                 // check if item is already in the watchlist
                 let targetObject = {
-                    "id":detailedInfo.id,
-                    "dataType":mediaType,
-                    "imageURL":imageURL,
-                    "name":detailedInfo.name
+                    "id": detailedInfo.id,
+                    "dataType": mediaType,
+                    "imageURL": imageURL,
+                    "name": detailedInfo.name
                 }
                 const exists = watchlist.some(item => item.id === targetObject.id && item.dataType === targetObject.dataType);
-                if (!exists){
+                if (!exists) {
                     watchlist.push(targetObject)
                     toggleToWatchListPerson.text("Remove from WatchList")
                 } else {
