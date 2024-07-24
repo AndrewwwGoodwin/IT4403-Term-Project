@@ -233,6 +233,13 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
     // Populate modal with detailed information
     const detailsDiv = $("#details");
     detailsDiv.empty();
+    const itemInWatchlist = watchlist.some(item => item.id === detailedInfo.id);
+    let watchListText;
+    if(itemInWatchlist){
+        watchListText = "Remove from Watch List";
+    } else {
+        watchListText = "Add to Watch List";
+    }
     switch (mediaType) {
         case "tv":
             const titleTV = $("<h2>").text(detailedInfo.name || "")
@@ -245,7 +252,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const episodeCountTV = $("<p>").html("<b>Episode Count:</b> " + detailedInfo.number_of_episodes || "")
             const overviewTextTV = $("<p>").html("<b>Overview:</b><br> " + detailedInfo.overview || "")
             const mediaTypeTV = $("<p>").html("<b>Media Type:</b> TV Show")
-            const toggleToWatchListTV = $("<button>").text("Add to Watch List").on("click", function () {
+            const toggleToWatchListTV = $("<button>").text(watchListText).on("click", function () {
                 // check if item is already in the watchlist
                 let targetObject = {
                     "id":detailedInfo.id,
@@ -279,7 +286,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const runtimeMovie = $("<p>").html("<b>Runtime:</b> " + detailedInfo.runtime + " Minutes" || "")
             const overviewTextMovie = $("<p>").html("<b>Overview:</b> <br> " + detailedInfo.overview || "")
             const mediaTypeMovie = $("<p>").html("<b>Media Type:</b> Movie")
-            const toggleToWatchListMovie = $("<button>").text("Add to Watch List").on("click", function() {
+            const toggleToWatchListMovie = $("<button>").text(watchListText).on("click", function() {
                 // check if item is already in the watchlist
                 let targetObject = {
                     "id":detailedInfo.id,
@@ -312,7 +319,7 @@ function DrawDetailedInfoScreen(detailedInfo, mediaType, imageURL) {
             const genderPerson = $("<p>").html("<b>Gender:</b> " + gender[detailedInfo.gender].toString() || "")
             const birthdayPerson = $("<p>").html("<b>Birthday:</b> " + detailedInfo.birthday || "")
             const biographyPerson = $("<p>").html("<b>Biography:</b> <br> " + detailedInfo.biography || "")
-            const toggleToWatchListPerson = $("<button>").text("Add to Watch List").on("click", function () {
+            const toggleToWatchListPerson = $("<button>").text(watchListText).on("click", function () {
                 // check if item is already in the watchlist
                 let targetObject = {
                     "id":detailedInfo.id,
